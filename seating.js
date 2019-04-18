@@ -40,18 +40,22 @@ class seatingChart {
     console.log("Free seats: " + this.freeSeats);
     console.log(this.rowDetails);
   }
-
+  isSeatFree(row, column)
+  {
+    // If the seat exists and is free return true.  Otherwise return false.
+    return (this.allSeats[row-1][column-1 != undefined && this.allSeats[row-1][column-1] === 0);
+  }
   reserveSeat(row, column)
   {
-    if (this.allSeats[row-1][column-1 != undefined && this.allSeats[row-1][column-1] === 1)
-      return false;
-    else {
+    if (isSeatFree(row, column))
+    {
       this.allSeats[row-1][column-1] = 1;
       this.freeSeats--;
       this.rowDetails[row-1].freeSeats--;
       this.rowDetails[row-1].largestGroup = this.findLargestGroup(row);
       return true;
     }
+    return false; // Seat was not free or invalid
   }
   findLargestGroup(row)
   {
@@ -64,7 +68,7 @@ class seatingChart {
       else {
         //seat is not free.
         if (count > largest)
-        largest = count;
+          largest = count;
         //reset count, and keep checking
         count = 0;
       }
