@@ -77,11 +77,22 @@ class seatingChart {
     }
     return largest; //todo also return the start location of this block
   }
-  firstFreeInRow(row)
+  findBestSeats(numSeats)
   {
+    for (let i = 1; i <= this.rows; i++)
+    {
+      if (this.findLargestGroup(i) < numSeats)  // This number can't fit in this row
+        continue; //End the loop early.
 
+      return i;  // just return the row for now
+    }
+    return -1;
   }
 }
 
 
 var seats = new seatingChart();
+seats.reserveSeat(1,6)
+seats.reserveSeat(1,3)
+seats.reserveSeat(1,1)
+seats.reserveSeat(2,5)
