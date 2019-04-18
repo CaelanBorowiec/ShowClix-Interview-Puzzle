@@ -43,11 +43,11 @@ class seatingChart {
   isSeatFree(row, column)
   {
     // If the seat exists and is free return true.  Otherwise return false.
-    return (this.allSeats[row-1][column-1 != undefined && this.allSeats[row-1][column-1] === 0);
+    return (this.allSeats[row-1][column-1] != undefined && this.allSeats[row-1][column-1] === 0);
   }
   reserveSeat(row, column)
   {
-    if (isSeatFree(row, column))
+    if (this.isSeatFree(row, column))
     {
       this.allSeats[row-1][column-1] = 1;
       this.freeSeats--;
@@ -61,12 +61,14 @@ class seatingChart {
   {
     var count = 0;
     var largest = 0;
-    for (let i = 0; i < this.rowLength; i++)
+    for (let i = 1; i <= this.rowLength; i++)
     {
-      if (this.allSeats[row-1][i] === true)
+      if (this.isSeatFree(row, i) === true)
         count++; // Seat is free, count up
-      else {
-        //seat is not free.
+
+      if (this.isSeatFree(row, i) === false || i == this.rowLength)
+      {
+        //seat is not free or is the last seat
         if (count > largest)
           largest = count;
         //reset count, and keep checking
