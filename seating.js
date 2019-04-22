@@ -7,7 +7,7 @@ class seatingChart {
   constructor()
   {
     this.rows = 3;
-    this.rowLength = 11;
+    this.rowLength = 10;
     this.totalSeats = this.rows * this.rowLength;
     this.freeSeats = this.totalSeats;
     if (this.totalSeats < 1)
@@ -181,7 +181,7 @@ class seatingChart {
       // There is extra space in the block to move to the right
       let lastSeat = seatingOptions[i].firstseat + numSeats - 1; // The position of the first seat, plus the total number of seats, minus 1 since we don't need to count the first seat again.
       //While the middle of the group is before the middle of the row, AND the first seat after the group is free
-      while (groupMiddle < rowMiddle && this.isSeatFree(seatingOptions[i].row, lastSeat + 1))
+      while (groupMiddle <= rowMiddle && this.isSeatFree(seatingOptions[i].row, lastSeat + 1))
       {
         console.log("Shifting seats 1 to the right");
         seatingOptions[i].firstseat ++; // Shift the group right by 1
