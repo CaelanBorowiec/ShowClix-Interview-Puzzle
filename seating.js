@@ -40,11 +40,24 @@ class seatingChart {
     console.log("Free seats: " + this.freeSeats);
     console.log(this.rowDetails);
   }
+
+  /**
+   * Returns if a seat is both valid and free.
+   * @param row - row number of seat
+   * @param column - column number of seat
+   * @return True if the seat is valid and free.  False otherwise.
+   */
   isSeatFree(row, column)
   {
-    // If the seat exists and is free return true.  Otherwise return false.
     return (this.allSeats[row-1][column-1] != undefined && this.allSeats[row-1][column-1] === 0);
   }
+
+  /**
+   * Accesses the array of seats and marks the specified seat as reserved
+   * @param row - row number of seat
+   * @param column - column number of seat
+   * @return True if the seat has been reserved.  False in the event of a failure.
+   */
   reserveSeat(row, column)
   {
     if (this.isSeatFree(row, column))
@@ -57,6 +70,12 @@ class seatingChart {
     }
     return false; // Seat was not free or invalid
   }
+
+  /**
+   * Returns the largest free contiguous group of seats in a row
+   * @param row - row number to check
+   * @return int count of seats in the largest empty space.  Will return 0 if the row is full.
+   */
   findLargestGroup(row)
   {
     var count = 0;
@@ -77,8 +96,17 @@ class seatingChart {
     }
     return largest; //todo also return the start location of this block
   }
+
+  /**
+   * Find the optimal seating location for a group
+   * @param seats - the number of contiguous seats to reserve
+   * @return The first row with space
+   * @return todo: the starting seat (row/column) for a set of seats with the lowest manhattan distance which will accommodate the group size
+   */
   findBestSeats(numSeats)
   {
+    if (numSeats > this.rowLength)
+
     for (let i = 1; i <= this.rows; i++)
     {
       if (this.findLargestGroup(i) < numSeats)  // This number can't fit in this row
@@ -87,6 +115,18 @@ class seatingChart {
       return i;  // just return the row for now
     }
     return -1;
+  }
+
+  /**
+	 * Get the Manhattan distance of a seat from the center column of the front row
+	 * @param row - row number of seat
+	 * @param column - column number of seat
+	 * @return Manhattan distance of seat from the center column of the front row
+ */
+  getManhattanDistance(row, column)
+  {
+    let middle = (this.rowLength + 1) / 2;
+    return (row - 1) + Math.abs(column - middle);
   }
 }
 
