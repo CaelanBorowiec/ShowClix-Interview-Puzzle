@@ -98,6 +98,53 @@ class seatingChart {
   }
 
   /**
+   * Searches for empty seat blocks that can accomidate a size of numSeats
+   * @param numSeats - The minimum number of empty contiguous seats to search for.
+   * @return array: An array of objects containing matching seat groups with the following details:
+   * Object: {position: [row, firstSeat], groupSize}
+   */
+  findEmptyGroups(numSeats)
+  {
+    if (numSeats > this.rowLength || numSeats < 1) //more seats than in a row, or less than 1 seat requested.
+      return -1;
+
+    var seatGroups = [];
+
+    for (var row = 1; row <= this.rows; row++)
+    {
+      var count = 0;
+      var groupStart = undefined;
+      for (var column = 1; column <= this.rowLength; column++)
+      {
+        if (this.isSeatFree(row, column) === true)
+        {
+          count++; // Seat is free, count up
+          if (groupStart == undefined)
+            groupStart = column;
+        }
+
+        if (this.isSeatFree(row, column) === false || column == this.rowLength) //seat is not free or is the last seat
+        {
+          if (count >= numSeats) // This group can fit here
+          {
+            //store the group
+            seatGroups.push({
+              position: [row, groupStart],
+              size: count
+            });
+          }
+          //reset count, and keep checking
+          count = 0;
+          groupStart = undefined;
+        }
+      }
+    }
+
+    return seatGroups;
+  }
+
+
+  /**
    * Find the optimal seating location for a group
    * @param seats - the number of contiguous seats to reserve
    * @return The first row with space
@@ -105,14 +152,15 @@ class seatingChart {
    */
   findBestSeats(numSeats)
   {
-    if (numSeats > this.rowLength)
+    if (numSeats > this.rowLength || numSeats < 1) //more seats than in a row, or less than 1 seat requested.
+      return -1;
 
-    for (let i = 1; i <= this.rows; i++)
+    for (let row = 1; row <= this.rows; row++)
     {
-      if (this.findLargestGroup(i) < numSeats)  // This number can't fit in this row
+      if (this.findLargestGroup(row) < numSeats)  // This number can't fit in this row
         continue; //End the loop early.
 
-      return i;  // just return the row for now
+      return row;  // just return the row for now
     }
     return -1;
   }
