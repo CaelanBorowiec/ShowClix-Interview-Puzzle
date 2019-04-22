@@ -101,7 +101,7 @@ class seatingChart {
    * Searches for empty seat blocks that can accomidate a size of numSeats
    * @param numSeats - The minimum number of empty contiguous seats to search for.
    * @return array: An array of objects containing matching seat groups with the following details:
-   * Object: {position: [row, firstSeat], groupSize}
+   * Object: {row: number, firstseat: seatnumber, size:groupsize}
    */
   findEmptyGroups(numSeats)
   {
@@ -129,7 +129,8 @@ class seatingChart {
           {
             //store the group
             seatGroups.push({
-              position: [row, groupStart],
+              row: row,
+              firstseat: groupStart,
               size: count
             });
           }
@@ -155,14 +156,50 @@ class seatingChart {
     if (numSeats > this.rowLength || numSeats < 1) //more seats than in a row, or less than 1 seat requested.
       return -1;
 
-    for (let row = 1; row <= this.rows; row++)
+    var seatingOptions = this.findEmptyGroups(numSeats);
+    var rowMiddle = Math.round(this.rowLength/2); // The middle column
+    var bestPosition = undefined;
+    var bestScore = undefined;
+    for (let i = 0; i < seatingOptions.length; i++) // For each group of seats
     {
-      if (this.findLargestGroup(row) < numSeats)  // This number can't fit in this row
-        continue; //End the loop early.
+      let groupMiddle = seatingOptions[i].firstseat + Math.floor(numSeats/2);
 
-      return row;  // just return the row for now
+      //Todo: combine this statement with the while loop
+      if (seatingOptions[i].size == numSeats || groupMiddle == rowMiddle)  // No further optimization for this group: Score it.
+      {
+        //Get the middle most seat of the group and calculate the manhattan distance for it
+        let score = this.getManhattanDistance(seatingOptions[i].row, groupMiddle)
+        if (bestPosition == undefined || score < bestScore)
+        {
+          bestPosition = [seatingOptions[i].row, seatingOptions[i].firstseat];
+          bestScore = score;
+        }
+        continue;
+      }
+
+      console.log("Optimizing location of group");
+      // There is extra space in the block to move to the right
+      let lastSeat = seatingOptions[i].firstseat + numSeats - 1; // The position of the first seat, plus the total number of seats, minus 1 since we don't need to count the first seat again.
+      //While the middle of the group is before the middle of the row, AND the first seat after the group is free
+      while (groupMiddle < rowMiddle && this.isSeatFree(seatingOptions[i].row, lastSeat + 1))
+      {
+        console.log("Shifting seats 1 to the right");
+        seatingOptions[i].firstseat ++; // Shift the group right by 1
+        groupMiddle ++;
+        lastSeat ++;
+      }
+
+      //Group is now center aligned in the empty space, or as close as possible.
+      let score = this.getManhattanDistance(seatingOptions[i].row, groupMiddle)
+      if (bestPosition == undefined || score < bestScore)
+      {
+        bestPosition = [seatingOptions[i].row, seatingOptions[i].firstseat];
+        bestScore = score;
+      }
+
+
     }
-    return -1;
+    return bestPosition;
   }
 
   /**
