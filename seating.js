@@ -4,10 +4,10 @@
 
 
 class seatingChart {
-  constructor()
+  constructor(rows, columns)
   {
-    this.rows = 3;
-    this.rowLength = 10;
+    this.rows = rows;
+    this.rowLength = columns;
     this.totalSeats = this.rows * this.rowLength;
     this.freeSeats = this.totalSeats;
     if (this.totalSeats < 1)
@@ -216,7 +216,7 @@ class seatingChart {
 }
 
 
-var seats = new seatingChart();
+var seats = new seatingChart(3, 11);
 seats.reserveSeat(1,6)
 seats.reserveSeat(1,3)
 seats.reserveSeat(1,1)
