@@ -213,12 +213,17 @@ class seatingChart {
       return -1;
 
     var seatingOptions = this.findEmptyGroups(numSeats);
-    var rowMiddle = Math.round(this.rowLength/2); // The middle column
+    var rowMiddle = (this.rowLength+1)/2; // The middle of the seats in the row
     var bestPosition = undefined;
     var bestScore = undefined;
     for (let i = 0; i < seatingOptions.length; i++) // For each group of seats
     {
-      let groupMiddle = seatingOptions[i].firstseat + Math.floor(numSeats/2);
+
+      // Formula for the middle of a group:
+      // offset of the seat placement minus 1 to avoid double-counting the first seat. Then add (seats + 1)/2:
+      //    The middle of 4 seats is between seats, so 4+1=5: 5/2=2.5
+      //    The middle of 5 seats is the 3rd seat, so 5+1=6: 6/2=3
+      let groupMiddle = seatingOptions[i].firstseat - 1 + ((numSeats + 1) / 2);
 
       //Todo: combine this statement with the while loop
       if (seatingOptions[i].size == numSeats || groupMiddle == rowMiddle)  // No further optimization for this group: Score it.
@@ -227,7 +232,7 @@ class seatingChart {
         let score = this.getManhattanDistance(seatingOptions[i].row, groupMiddle)
         if (bestPosition == undefined || score < bestScore)
         {
-          bestPosition = [seatingOptions[i].row, seatingOptions[i].firstseat];
+          bestPosition = [seatingOptions[i].row, seatingOptions[i].firstseat, score];
           bestScore = score;
         }
         continue;
@@ -236,7 +241,7 @@ class seatingChart {
       // There is extra space in the block to move to the right
       let lastSeat = seatingOptions[i].firstseat + numSeats - 1; // The position of the first seat, plus the total number of seats, minus 1 since we don't need to count the first seat again.
       //While the middle of the group is before the middle of the row, AND the first seat after the group is free
-      while (groupMiddle <= rowMiddle && this.isSeatFree(seatingOptions[i].row, lastSeat + 1))
+      while (groupMiddle < rowMiddle && this.isSeatFree(seatingOptions[i].row, lastSeat + 1))
       {
         seatingOptions[i].firstseat ++; // Shift the group right by 1
         groupMiddle ++;
@@ -247,7 +252,7 @@ class seatingChart {
       let score = this.getManhattanDistance(seatingOptions[i].row, groupMiddle)
       if (bestPosition == undefined || score < bestScore)
       {
-        bestPosition = [seatingOptions[i].row, seatingOptions[i].firstseat];
+        bestPosition = [seatingOptions[i].row, seatingOptions[i].firstseat, score];
         bestScore = score;
       }
 
@@ -269,7 +274,7 @@ class seatingChart {
 }
 
 //Test cases
-var seats = new seatingChart(3, 11);
+var seats = new seatingChart(3, 10);
 seats.reserveSeat(1,6)
 seats.reserveSeat(1,3)
 seats.reserveSeat(1,1)
