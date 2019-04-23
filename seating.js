@@ -101,6 +101,30 @@ class seatingChart {
     return true;
   }
 
+
+    /**
+     * Clears the reservation for a seat or group of seats
+     * @param row - row number of seat
+     * @param column - column number of seat
+     * @param count (optional) - the number of seats to clear in the row, starting from 'column'
+     * @return True if the seats have been cleared.  False in the event of an invalid request.
+     */
+    cancelSeatReservation(row, column, count=1)
+    {
+      if (!this.isSeatValid(row, column) || this.rowLength < (column+count-1))
+        return false;
+
+      for (let ticket = 0; ticket < count; ticket++)
+      {
+        this.allSeats[row-1][column-1+ticket] = reservationType.NONE;
+        this.freeSeats++;
+        this.rowDetails[row-1].freeSeats++;
+      }
+      this.rowDetails[row-1].largestGroup = this.findLargestGroup(row);
+
+      return true;
+    }
+
   /**
    * Returns the largest free contiguous group of seats in a row
    * @param row - row number to check
