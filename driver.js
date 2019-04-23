@@ -18,10 +18,19 @@ for(var i = 0;i < lines.length;i++)
   else
   {
     //All following lines: Reserve groups.
-    let bestseats = puppetShow.findBestSeats(parseInt(lines[i]));
-    if (bestseats != -1)
+    let numSeats = parseInt(lines[i]);
+    let bestseats = puppetShow.findBestSeats(numSeats);
+    if (bestseats != undefined && bestseats != -1)
     {
-      puppetShow.reserveSeat(bestseats[0], bestseats[1], bestseats[2]);
+      puppetShow.reserveSeat(bestseats[0], bestseats[1], numSeats);
+      let firstSeat = "R" + bestseats[0] + "C" + bestseats[1];
+      if (numSeats == 1)
+        console.log("Reserved seat", firstSeat);
+      else
+      {
+        let lastSeat = "R" + bestseats[0] + "C" + (bestseats[1] + numSeats -1);
+        console.log("Reserved seats: ", firstSeat, '-', lastSeat);
+      }
     }
   }
 }
