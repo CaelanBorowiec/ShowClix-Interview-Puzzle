@@ -215,7 +215,7 @@ class seatingChart {
     var seatingOptions = this.findEmptyGroups(numSeats);
     var rowMiddle = (this.rowLength+1)/2; // The middle of the seats in the row
     var bestPosition = undefined;
-    var bestScore = undefined;
+    var shortestDistance = undefined;
     for (let i = 0; i < seatingOptions.length; i++) // For each group of seats
     {
 
@@ -236,11 +236,11 @@ class seatingChart {
       }
 
       //Group is now center aligned in the empty space, or as close as possible.
-      let score = this.getManhattanDistance(seatingOptions[i].row, groupMiddle)
-      if (bestPosition == undefined || score < bestScore)
+      let distance = this.getManhattanDistance(seatingOptions[i].row, groupMiddle)
+      if (bestPosition == undefined || distance < shortestDistance)
       {
-        bestPosition = [seatingOptions[i].row, seatingOptions[i].firstseat, score];
-        bestScore = score;
+        bestPosition = [seatingOptions[i].row, seatingOptions[i].firstseat, distance];
+        shortestDistance = distance;
       }
 
     }
