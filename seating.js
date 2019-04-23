@@ -148,7 +148,7 @@ class seatingChart {
         count = 0;
       }
     }
-    return largest; //todo also return the start location of this block
+    return largest;
   }
 
   /**
@@ -159,13 +159,16 @@ class seatingChart {
    */
   findEmptyGroups(numSeats)
   {
-    if (numSeats > this.rowLength || numSeats < 1) //more seats than in a row, or less than 1 seat requested. todo: also check if the stored largest group is big enough
+    if (numSeats > this.rowLength || numSeats < 1) //more seats than in a row, or less than 1 seat requested.
       return -1;
 
     var seatGroups = [];
 
     for (var row = 1; row <= this.rows; row++)
     {
+      if (this.rowDetails[row-1].largestGroup < numSeats)
+      continue;
+
       var count = 0;
       var groupStart = undefined;
       for (var column = 1; column <= this.rowLength; column++)
@@ -202,8 +205,7 @@ class seatingChart {
   /**
    * Find the optimal seating location for a group
    * @param seats - the number of contiguous seats to reserve
-   * @return The first row with space
-   * @return todo: the starting seat (row/column) for a set of seats with the lowest manhattan distance which will accommodate the group size
+   * @return Array: The starting seat [row, column] for a set of seats with the lowest manhattan distance which will accommodate the group size
    */
   findBestSeats(numSeats)
   {
