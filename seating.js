@@ -1,3 +1,9 @@
+const reservationType = {
+  NONE: 0,
+  STANDARD: 1,
+  VIP: 2
+}
+
 class seatingChart {
   constructor(rows, columns)
   {
@@ -56,19 +62,29 @@ class seatingChart {
    * Accesses the array of seats and marks the specified seat as reserved
    * @param row - row number of seat
    * @param column - column number of seat
+   * @param count (optional) - the number of seats to reserve in the row, starting from 'column'
+   * @param reserveFlag (optional) - the reservationType to set for these seats
    * @return True if the seat has been reserved.  False in the event of a failure.
    */
-  reserveSeat(row, column)
+  reserveSeat(row, column, count=1, reserveFlag=reservationType.STANDARD)
   {
-    if (this.isSeatFree(row, column))
+    // First lets make sure all the seats are valid before doing anything else
+    for (let ticket = 0; ticket < count; ticket++)
     {
-      this.allSeats[row-1][column-1] = 1;
+      if (!this.isSeatFree(row, column + ticket))
+        return false; // a seat in this range was taken or invalid
+    }
+
+    //Okay, reserve the seats
+    for (let ticket = 0; ticket < count; ticket++)
+    {
+      this.allSeats[row-1][column-1+ticket] = reserveFlag;
       this.freeSeats--;
       this.rowDetails[row-1].freeSeats--;
-      this.rowDetails[row-1].largestGroup = this.findLargestGroup(row);
-      return true;
     }
-    return false; // Seat was not free or invalid
+    this.rowDetails[row-1].largestGroup = this.findLargestGroup(row);
+
+    return true;
   }
 
   /**
