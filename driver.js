@@ -6,7 +6,7 @@ for(var i = 0;i < lines.length;i++)
 {
   if (i === 0)
   {
-    //Set up initial reservations
+    //First line: Set up initial reservations
     var groups = lines[i].split(' ');
     for (var group = 0; group < groups.length; group++)
     {
@@ -16,5 +16,12 @@ for(var i = 0;i < lines.length;i++)
     }
   }
   else
-    console.log(lines[i]);
+  {
+    //All following lines: Reserve groups.
+    let bestseats = puppetShow.findBestSeats(parseInt(lines[i]));
+    if (bestseats != -1)
+    {
+      puppetShow.reserveSeat(bestseats[0], bestseats[1], bestseats[2]);
+    }
+  }
 }
