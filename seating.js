@@ -1,4 +1,5 @@
 const reservationType = {
+INVALID: undefined,
   NONE: 0,
   STANDARD: 1,
   VIP: 2
@@ -14,7 +15,6 @@ class seatingChart {
     if (this.totalSeats < 1)
       throw "This seating arrangement has no seats.";
 
-    this.reservedTo = "";
     this.rowDetails = new Array(this.rows);
 
     // Create a seat grid
@@ -44,7 +44,7 @@ class seatingChart {
    */
   isSeatValid(row, column)
   {
-    return this.allSeats[row-1][column-1] != undefined;
+    return this.allSeats[row-1][column-1] != reservationType.INVALID;
   }
 
   /**
@@ -55,7 +55,7 @@ class seatingChart {
    */
   isSeatFree(row, column)
   {
-    return (this.isSeatValid(row, column) && this.allSeats[row-1][column-1] === 0);
+    return (this.isSeatValid(row, column) && this.allSeats[row-1][column-1] === reservationType.NONE);
   }
 
   /**
@@ -121,7 +121,7 @@ class seatingChart {
    */
   findEmptyGroups(numSeats)
   {
-    if (numSeats > this.rowLength || numSeats < 1) //more seats than in a row, or less than 1 seat requested.
+    if (numSeats > this.rowLength || numSeats < 1) //more seats than in a row, or less than 1 seat requested. todo: also check if the stored largest group is big enough
       return -1;
 
     var seatGroups = [];
@@ -193,13 +193,11 @@ class seatingChart {
         continue;
       }
 
-      console.log("Optimizing location of group");
       // There is extra space in the block to move to the right
       let lastSeat = seatingOptions[i].firstseat + numSeats - 1; // The position of the first seat, plus the total number of seats, minus 1 since we don't need to count the first seat again.
       //While the middle of the group is before the middle of the row, AND the first seat after the group is free
       while (groupMiddle <= rowMiddle && this.isSeatFree(seatingOptions[i].row, lastSeat + 1))
       {
-        console.log("Shifting seats 1 to the right");
         seatingOptions[i].firstseat ++; // Shift the group right by 1
         groupMiddle ++;
         lastSeat ++;
@@ -212,7 +210,6 @@ class seatingChart {
         bestPosition = [seatingOptions[i].row, seatingOptions[i].firstseat];
         bestScore = score;
       }
-
 
     }
     return bestPosition;
@@ -231,7 +228,7 @@ class seatingChart {
   }
 }
 
-
+//Test cases
 var seats = new seatingChart(3, 11);
 seats.reserveSeat(1,6)
 seats.reserveSeat(1,3)
