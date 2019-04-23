@@ -213,6 +213,9 @@ class seatingChart {
       return -1;
 
     var seatingOptions = this.findEmptyGroups(numSeats);
+    if (seatingOptions.length < 1)
+      return -1;
+
     var rowMiddle = (this.rowLength+1)/2; // The middle of the seats in the row
     var bestPosition = undefined;
     var shortestDistance = undefined;
@@ -242,7 +245,7 @@ class seatingChart {
         bestPosition = [seatingOptions[i].row, seatingOptions[i].firstseat, distance];
         shortestDistance = distance;
       }
-    
+
       if (Math.floor(shortestDistance) <= seatingOptions[i].row)
         return bestPosition;
 
