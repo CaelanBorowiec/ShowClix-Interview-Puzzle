@@ -10,9 +10,9 @@ for(var i = 0;i < lines.length;i++)
     var groups = lines[i].split(' ');
     for (var group = 0; group < groups.length; group++)
     {
-      console.log(groups[group]);
       var match = regex.exec(groups[group]);
-      console.log("Row", match[1], "Column", match[2]);
+      if (puppetShow.reserveSeat(parseInt(match[1]), parseInt(match[2])))
+        console.log("Reserved seat at: Row", match[1], "Column", match[2]);
     }
   }
   else
