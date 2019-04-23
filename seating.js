@@ -1,5 +1,5 @@
 const reservationType = {
-INVALID: undefined,
+  INVALID: undefined,
   NONE: 0,
   STANDARD: 1,
   VIP: 2
@@ -44,7 +44,7 @@ class seatingChart {
    */
   isSeatValid(row, column)
   {
-    return this.allSeats[row-1][column-1] != reservationType.INVALID;
+    return (this.allSeats[row-1] != reservationType.INVALID && this.allSeats[row-1][column-1] != reservationType.INVALID);
   }
 
   /**
@@ -56,6 +56,20 @@ class seatingChart {
   isSeatFree(row, column)
   {
     return (this.isSeatValid(row, column) && this.allSeats[row-1][column-1] === reservationType.NONE);
+  }
+
+  /**
+   * Returns the reservation status of a seat.
+   * @param row - row number of seat
+   * @param column - column number of seat
+   * @return undefined if the seat does not exist, otherwise a reservationType value.
+   */
+  getSeatReservation(row, column)
+  {
+    if (!this.isSeatValid(row, column))
+      return reservationType.INVALID;
+    else
+      return this.allSeats[row-1][column-1];
   }
 
   /**
