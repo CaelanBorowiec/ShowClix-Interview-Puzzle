@@ -242,6 +242,9 @@ class seatingChart {
         bestPosition = [seatingOptions[i].row, seatingOptions[i].firstseat, distance];
         shortestDistance = distance;
       }
+    
+      if (Math.floor(shortestDistance) <= seatingOptions[i].row)
+        return bestPosition;
 
     }
     return bestPosition;
