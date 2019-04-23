@@ -224,24 +224,11 @@ class seatingChart {
       //    The middle of 4 seats is between seats, so 4+1=5: 5/2=2.5
       //    The middle of 5 seats is the 3rd seat, so 5+1=6: 6/2=3
       let groupMiddle = seatingOptions[i].firstseat - 1 + ((numSeats + 1) / 2);
+      // The position of the first seat, + the total number of seats, -1 so we don't double count the first seat.
+      let lastSeat = seatingOptions[i].firstseat + numSeats - 1;
 
-      //Todo: combine this statement with the while loop
-      if (seatingOptions[i].size == numSeats || groupMiddle == rowMiddle)  // No further optimization for this group: Score it.
-      {
-        //Get the middle most seat of the group and calculate the manhattan distance for it
-        let score = this.getManhattanDistance(seatingOptions[i].row, groupMiddle)
-        if (bestPosition == undefined || score < bestScore)
-        {
-          bestPosition = [seatingOptions[i].row, seatingOptions[i].firstseat, score];
-          bestScore = score;
-        }
-        continue;
-      }
-
-      // There is extra space in the block to move to the right
-      let lastSeat = seatingOptions[i].firstseat + numSeats - 1; // The position of the first seat, plus the total number of seats, minus 1 since we don't need to count the first seat again.
-      //While the middle of the group is before the middle of the row, AND the first seat after the group is free
-      while (groupMiddle < rowMiddle && this.isSeatFree(seatingOptions[i].row, lastSeat + 1))
+      //While the gap has more seats than the requested number, the middle of the group is before the middle of the row, AND the first seat after the group is free
+      while (seatingOptions[i].size > numSeats && groupMiddle < rowMiddle && this.isSeatFree(seatingOptions[i].row, lastSeat + 1))
       {
         seatingOptions[i].firstseat ++; // Shift the group right by 1
         groupMiddle ++;
@@ -274,7 +261,7 @@ class seatingChart {
 }
 
 //Test cases
-var seats = new seatingChart(3, 10);
+var seats = new seatingChart(3, 11);
 seats.reserveSeat(1,6)
 seats.reserveSeat(1,3)
 seats.reserveSeat(1,1)
