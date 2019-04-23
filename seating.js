@@ -1,8 +1,3 @@
-// Row class?
-// Track largest free group
-// Track total free seats in row
-
-
 class seatingChart {
   constructor(rows, columns)
   {
@@ -34,11 +29,16 @@ class seatingChart {
     this.allSeats = seatGrid;
   }
 
-  showGrid()
+
+  /**
+   * Returns if a seat is valid.
+   * @param row - row number of seat
+   * @param column - column number of seat
+   * @return True if the seat is valid.  False otherwise.
+   */
+  isSeatValid(row, column)
   {
-    console.log(this.allSeats);
-    console.log("Free seats: " + this.freeSeats);
-    console.log(this.rowDetails);
+    return this.allSeats[row-1][column-1] != undefined;
   }
 
   /**
@@ -49,7 +49,7 @@ class seatingChart {
    */
   isSeatFree(row, column)
   {
-    return (this.allSeats[row-1][column-1] != undefined && this.allSeats[row-1][column-1] === 0);
+    return (this.isSeatValid(row, column) && this.allSeats[row-1][column-1] === 0);
   }
 
   /**
