@@ -3,7 +3,8 @@ var input = "R1C4 R1C6 R2C3 R2C7 R3C9 R3C10\n3\n3\n3\n1\n10"; // Todo replace pl
 var maxtickets = 10;
 
 var lines = input.split('\n');
-var regex = /[Rr](\d*)[Cc](\d*)/;
+// Matches R1C2 (Row 1, column 2), or R1C2N3 (Row 1, column 2, seats 3)
+var regex = /[Rr](\d*)[Cc](\d*)([Nn](\d*))?/;
 for(var i = 0; i < lines.length; i++)
 {
   if (i === 0 && lines[i] != "")
@@ -13,7 +14,11 @@ for(var i = 0; i < lines.length; i++)
     for (var group = 0; group < groups.length; group++)
     {
       var match = regex.exec(groups[group]);
-      if (puppetShow.reserveSeat(parseInt(match[1]), parseInt(match[2]), 1, 2))
+      var seats = 1;
+      if (match[4] != undefined)
+        seats = parseInt(match[4]);
+
+      if (puppetShow.reserveSeat(parseInt(match[1]), parseInt(match[2]), seats, 2))
         console.log("Reserved seat at: Row", match[1], "Column", match[2]);
     }
   }
