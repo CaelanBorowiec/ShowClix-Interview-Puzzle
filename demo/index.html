@@ -15,9 +15,11 @@
 		// Send log messages to DOM ID #log and display the seating in DOM ID #seating
 		var puppetShow = new seatingDriver(3, 11, 10, "log", "seating");
 
+		// Hook clicks on the run button
 		$("#run").click(function(){
+			// Capture and send use input for processing
 			puppetShow.onUserInput($('textarea#input').val());
-			return false;
+			return false; // Prevent the form from reloading the page.
 		});
 	});
 	</script>
