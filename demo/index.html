@@ -8,16 +8,27 @@
 	<script src="./js/jquery-2.1.1.min.js" type="application/javascript"></script>
 	<script src="../seating.js" type="application/javascript"></script>
 	<script src="../driver.js" type="application/javascript"></script>
+
+	<script type="application/javascript">
+	$( document ).ready(function() {
+		var puppetShow = new seatingDriver(3,11,10, "log");
+
+		$("#run").click(function(){
+			puppetShow.onUserInput($('textarea#input').val());
+
+		});
+	});
+	</script>
 </head>
 <body style="">
 	<div class="container">
 		<div class="content">
 			<div>
-				<form action="#" class="pure-form pure-form-aligned" method="post">
+				<form action="" class="pure-form pure-form-aligned" method="">
 					<fieldset>
 						<div class="pure-control-group">
-							<label for="description">Input</label>
-							<textarea class="pure-u-2-3" id="description" name="description" placeholder="Seating input" style="height: 160px; resize: vertical;">R1C4 R1C6 R2C3 R2C7 R3C9 R3C10
+							<label for="input">Input</label>
+							<textarea class="pure-u-2-3" id="input" name="description" placeholder="Seating input" style="height: 160px; resize: vertical;">R1C4 R1C6 R2C3 R2C7 R3C9 R3C10
 3
 3
 3
@@ -31,9 +42,9 @@
 							<textarea class="pure-u-2-3" id="log" name="log" placeholder="Enter input and press run" readonly style="height: 160px; resize: vertical;"></textarea>
 						</div>
 						<div class="pure-controls">
-							<button class="pure-button pure-button-primary" type="submit">Run</button>
+							<button class="pure-button pure-button-primary" id="run">Run</button>
 						</div>
-					</fieldset><input name="new" type="hidden" value="false">
+					</fieldset>
 				</form>
 			</div>
 		</div>
