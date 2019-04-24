@@ -205,7 +205,7 @@ class seatingChart {
   /**
    * Find the optimal seating location for a group
    * @param seats - the number of contiguous seats to reserve
-   * @return Array: The starting seat [row, column] for a set of seats with the lowest manhattan distance which will accommodate the group size
+   * @return Array (or -1 on failure): The starting seat [row, column] for a set of seats with the lowest manhattan distance which will accommodate the group size
    */
   findBestSeats(numSeats)
   {
@@ -213,7 +213,7 @@ class seatingChart {
       return -1;
 
     var seatingOptions = this.findEmptyGroups(numSeats);
-    if (seatingOptions.length < 1)
+    if (seatingOptions.length == undefined || seatingOptions.length < 1)
       return -1;
 
     var rowMiddle = (this.rowLength+1)/2; // The middle of the seats in the row
