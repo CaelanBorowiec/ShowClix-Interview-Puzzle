@@ -64,6 +64,22 @@ a:hover,a:active,a:focus {
 
 table#seatinglayout {
     margin: 20px auto;
+	  border: 1px solid black;
+}
+
+#seatinglayout th, #seatinglayout td {
+  border: 1px solid black;
+	padding: 2px 7px;
+}
+
+#seatinglayout .colorV {
+	background-color: blueviolet;
+}
+#seatinglayout .colorX {
+	background-color: red;
+}
+#seatinglayout .colorO {
+	background-color: green;
 }
 
 /* ~~ This is the layout information. ~~

@@ -125,7 +125,20 @@ class seatingDriver {
       htmlTable += "<tr>";
       for (let column = 0; column < this.seating.rowLength; column++)
       {
-        htmlTable += "<td>E</td>";
+        let seatValue = this.seating.getSeatReservation(row+1, column+1);
+        switch (seatValue)
+        {
+          case 0:
+            seatValue = "O";
+            break;
+          case 1:
+            seatValue = "X";
+            break;
+          case 2:
+            seatValue = "V"
+            break;
+        }
+        htmlTable += "<td class='color" + seatValue + "'>"+ seatValue +"</td>";
       }
       htmlTable += "</tr>";
     }
