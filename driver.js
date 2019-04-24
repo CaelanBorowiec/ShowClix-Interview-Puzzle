@@ -1,3 +1,12 @@
+/**
+* Seating driver for use with seating.js
+* @param int: rows - the number of rows in the seating layout
+* @param int: columns - the number of columns (seats per row) in the seating layout
+* @param int: maxtickets - the max number of tickets a group can request
+* @param DOMid: logElementID - a textarea html element to print log messages to.
+* @param DOMid: layoutElementID - a div html element in which to render a seating table.
+* @return None
+*/
 class seatingDriver {
   constructor(rows, columns, maxtickets, logElementID, layoutElementID)
   {
@@ -14,7 +23,7 @@ class seatingDriver {
    * @param input - user input for processing
    * @return None
    */
-  onUserInput(input="R1C4 R1C6 R2C3 R2C7 R3C9 R3C10\n3\n3\n3\n1\n10")
+  onUserInput(input)
   {
     let lines = input.split('\n');
 
@@ -34,6 +43,7 @@ class seatingDriver {
     }
 
     this.logToPage("The remaining number of seats is:", this.seating.freeSeats);
+    this.renderHTMLTable();
   }
 
 /**
@@ -100,6 +110,10 @@ class seatingDriver {
 
   logToPage()
   {
+    let container = document.getElementById(this.loggingID);
+    if (container == null)
+      return false
+
     // Append strings similar to console.log
     var messageString = "";
     for (let i = 0; i < arguments.length; ++i)
@@ -111,15 +125,18 @@ class seatingDriver {
 
     // Just output to console.log for now:
     console.log(messageString);
-    document.getElementById(this.loggingID).value += messageString + "\n" || messageString;
-
-    this.renderHTMLTable();
+    container.value += messageString + "\n" || messageString;
+    return true;
   }
 
 
 
   renderHTMLTable()
   {
+    let container = document.getElementById(this.layoutID);
+    if (container == null)
+      return false
+
     var htmlTable = "<table id='seatinglayout'>";
     for (let row = 0; row < this.seating.rows; row++)
     {
@@ -145,6 +162,8 @@ class seatingDriver {
     }
     htmlTable += "</table>";
     htmlTable += "<p>O = Open, X = Reserved, V = VIP Reserved</p>"
-    document.getElementById(this.layoutID).innerHTML = htmlTable;
+    container.innerHTML = htmlTable;
+
+    return true;
   }
 }
