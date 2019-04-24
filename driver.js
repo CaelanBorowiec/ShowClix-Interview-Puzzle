@@ -1,5 +1,7 @@
 var puppetShow = new seatingChart(3, 11); //Create a seating group of 3 rows and 11 columns
 var input = "R1C4 R1C6 R2C3 R2C7 R3C9 R3C10\n3\n3\n3\n1\n10"; // Todo replace placeholder with actual user input method
+var maxtickets = 10;
+
 var lines = input.split('\n');
 var regex = /[Rr](\d)[Cc](\d*)/;
 for(var i = 0; i < lines.length; i++)
@@ -19,6 +21,12 @@ for(var i = 0; i < lines.length; i++)
   {
     //All following lines: Reserve groups.
     let numSeats = parseInt(lines[i]);
+    if (numSeats > maxtickets)
+    {
+      console.log("The max number of tickets that you can reserve is", maxtickets)
+      continue;
+    }
+
     let bestseats = puppetShow.findBestSeats(numSeats);
     if (bestseats != undefined && bestseats != -1)
     {
