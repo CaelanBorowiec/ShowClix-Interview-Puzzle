@@ -1,17 +1,16 @@
 class seatingDriver {
-  constructor()
+  constructor(rows, columns, maxtickets)
   {
-    this.maxtickets = 10;
+    this.maxtickets = maxtickets;
     // Matches R1C2 (Row 1, column 2), or R1C2N3 (Row 1, column 2, seats 3)
     this.regex = /[Rr](\d*)[Cc](\d*)([Nn](\d*))?/;
-    this.seating = new seatingChart(3, 11); //Create a seating group of 3 rows and 11 columns
+    this.seating = new seatingChart(rows, columns); //Create a seating group
   }
 
   /**
-   * Returns if a seat is valid.
-   * @param row - row number of seat
-   * @param column - column number of seat
-   * @return True if the seat is valid.  False otherwise.
+   * Main function, should be called when user input in captured.
+   * @param input - user input for processing
+   * @return None
    */
   onUserInput()
   {
@@ -37,6 +36,11 @@ class seatingDriver {
     console.log("The remaining number of seats is:", this.seating.freeSeats);
   }
 
+/**
+ * Reserves seats specified in the R1C2 or R1C2N3 format.
+ * @param line - A string containing space deliminated seat blocks in the format mentioned above.
+ * @return None
+ */
   reserveInitialSeats(line)
   {
     let groups = line.split(' ');
@@ -52,6 +56,11 @@ class seatingDriver {
     }
   }
 
+/**
+ * Reserves a group of seats in the best available location.
+ * @param seats - A number of contiguous seats to find and reserve.
+ * @return False on failure
+ */
   reserveSeatGroup(seats)
   {
     let numSeats = parseInt(seats);
@@ -79,8 +88,13 @@ class seatingDriver {
         let lastSeat = "R" + bestseats[0] + "C" + (bestseats[1] + numSeats -1);
         console.log("Reserved seats: ", firstSeat, '-', lastSeat);
       }
+
+      return true;
     }
     else
+    {
       console.log("Not Available.");
+      return false;
+    }
   }
 }
