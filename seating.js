@@ -212,43 +212,44 @@ class seatingChart {
     if (numSeats > this.rowLength || numSeats < 1) //more seats than in a row, or less than 1 seat requested.
       return -1;
 
-    var seatingOptions = this.findEmptyGroups(numSeats);
-    if (seatingOptions.length == undefined || seatingOptions.length < 1)
-      return -1;
-
     var rowMiddle = (this.rowLength+1)/2; // The middle of the seats in the row
     var bestPosition = undefined;
     var shortestDistance = undefined;
-    for (let i = 0; i < seatingOptions.length; i++) // For each group of seats
+    for (let row = 0; row < this.rows; row++) // For each row
     {
+      var seatingOptions = this.findEmptyGroups(numSeats, row+1, row+1); // Ask for results in a single row
+      if (seatingOptions == -1 || seatingOptions.length == undefined || seatingOptions.length < 1)
+        continue; // No results in this row, go to the next one
 
-      // Formula for the middle of a group:
-      // offset of the seat placement minus 1 to avoid double-counting the first seat. Then add (seats + 1)/2:
-      //    The middle of 4 seats is between seats, so 4+1=5: 5/2=2.5
-      //    The middle of 5 seats is the 3rd seat, so 5+1=6: 6/2=3
-      let groupMiddle = seatingOptions[i].firstseat - 1 + ((numSeats + 1) / 2);
-      // The position of the first seat, + the total number of seats, -1 so we don't double count the first seat.
-      let lastSeat = seatingOptions[i].firstseat + numSeats - 1;
-
-      //While the gap has more seats than the requested number, the middle of the group is before the middle of the row, AND the first seat after the group is free
-      while (seatingOptions[i].size > numSeats && groupMiddle < rowMiddle && this.isSeatFree(seatingOptions[i].row, lastSeat + 1))
+      for (let group = 0; group < seatingOptions.length; group++) // For each group of seats in the row
       {
-        seatingOptions[i].firstseat ++; // Shift the group right by 1
-        groupMiddle ++;
-        lastSeat ++;
+        // Formula for the middle of a group:
+        // offset of the seat placement minus 1 to avoid double-counting the first seat. Then add (seats + 1)/2:
+        //    The middle of 4 seats is between seats, so 4+1=5: 5/2=2.5
+        //    The middle of 5 seats is the 3rd seat, so 5+1=6: 6/2=3
+        let groupMiddle = seatingOptions[group].firstseat - 1 + ((numSeats + 1) / 2);
+        // The position of the first seat, + the total number of seats, -1 so we don't double count the first seat.
+        let lastSeat = seatingOptions[group].firstseat + numSeats - 1;
+
+        //While the gap has more seats than the requested number, the middle of the group is before the middle of the row, AND the first seat after the group is free
+        while (seatingOptions[group].size > numSeats && groupMiddle < rowMiddle && this.isSeatFree(seatingOptions[group].row, lastSeat + 1))
+        {
+          seatingOptions[group].firstseat ++; // Shift the group right by 1
+          groupMiddle ++;
+          lastSeat ++;
+        }
+
+        //Group is now center aligned in the empty space, or as close as possible.
+        let distance = this.getManhattanDistance(seatingOptions[group].row, groupMiddle)
+        if (bestPosition == undefined || distance < shortestDistance)
+        {
+          bestPosition = [seatingOptions[group].row, seatingOptions[group].firstseat, distance];
+          shortestDistance = distance;
+        }
+
+        if (Math.floor(shortestDistance) <= seatingOptions[group].row)
+          return bestPosition;
       }
-
-      //Group is now center aligned in the empty space, or as close as possible.
-      let distance = this.getManhattanDistance(seatingOptions[i].row, groupMiddle)
-      if (bestPosition == undefined || distance < shortestDistance)
-      {
-        bestPosition = [seatingOptions[i].row, seatingOptions[i].firstseat, distance];
-        shortestDistance = distance;
-      }
-
-      if (Math.floor(shortestDistance) <= seatingOptions[i].row)
-        return bestPosition;
-
     }
     return bestPosition;
   }
