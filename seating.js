@@ -265,10 +265,3 @@ class seatingChart {
     return (row - 1) + Math.abs(column - middle);
   }
 }
-
-//Test cases
-var seats = new seatingChart(3, 11);
-seats.reserveSeat(1,6)
-seats.reserveSeat(1,3)
-seats.reserveSeat(1,1)
-seats.reserveSeat(2,5)
