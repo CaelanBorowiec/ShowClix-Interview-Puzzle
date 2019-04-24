@@ -157,14 +157,14 @@ class seatingChart {
    * @return array: An array of objects containing matching seat groups with the following details:
    * Object: {row: number, firstseat: seatnumber, size:groupsize}
    */
-  findEmptyGroups(numSeats)
+  findEmptyGroups(numSeats, searchStart=1, searchEnd=this.rows)
   {
     if (numSeats > this.rowLength || numSeats < 1) //more seats than in a row, or less than 1 seat requested.
       return -1;
 
     var seatGroups = [];
 
-    for (var row = 1; row <= this.rows; row++)
+    for (var row = searchStart; row <= searchEnd; row++)
     {
       if (this.rowDetails[row-1].largestGroup < numSeats)
       continue;
