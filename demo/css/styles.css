@@ -84,6 +84,9 @@ table#seatinglayout {
 #seating p {
 	text-align: center;
 }
+p.instructions {
+	font-size: 10px;
+}
 
 /* ~~ This is the layout information. ~~
 
