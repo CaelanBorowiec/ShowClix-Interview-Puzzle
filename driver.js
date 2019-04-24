@@ -111,5 +111,25 @@ class seatingDriver {
     // Just output to console.log for now:
     console.log(messageString);
     document.getElementById(this.loggingID).value += messageString + "\n" || messageString;
+
+    this.renderHTMLTable();
+  }
+
+
+
+  renderHTMLTable()
+  {
+    var htmlTable = "<table id='seatinglayout'>";
+    for (let row = 0; row < this.seating.rows; row++)
+    {
+      htmlTable += "<tr>";
+      for (let column = 0; column < this.seating.rowLength; column++)
+      {
+        htmlTable += "<td>E</td>";
+      }
+      htmlTable += "</tr>";
+    }
+    htmlTable += "</table>";
+    $('#seating').html( htmlTable );
   }
 }
