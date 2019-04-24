@@ -19,7 +19,7 @@ class seatingDriver {
 
     for(var i = 0; i < lines.length; i++)
     {
-      if (i === 0 && lines[i] != "")
+      if (i === 0 && lines[i] != "" && this.regex.test(lines[i]))
       {
         //First line: Set up initial reservations
         this.reserveInitialSeats(lines[i]);
