@@ -34,7 +34,7 @@ class seatingDriver {
         //First line: Set up initial reservations
         this.reserveInitialSeats(lines[i]);
       }
-      else
+      else if (lines[i] != "" && !isNaN(lines[i]))
       {
         //All following lines: Reserve groups.
         if (!this.reserveSeatGroup(lines[i]))
