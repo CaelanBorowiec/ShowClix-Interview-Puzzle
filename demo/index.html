@@ -15,7 +15,7 @@
 
 		$("#run").click(function(){
 			puppetShow.onUserInput($('textarea#input').val());
-
+			return false;
 		});
 	});
 	</script>
@@ -24,7 +24,7 @@
 	<div class="container">
 		<div class="content">
 			<div>
-				<form action="" class="pure-form pure-form-aligned" method="">
+				<form action="" class="pure-form pure-form-aligned" method="post">
 					<fieldset>
 						<div class="pure-control-group">
 							<label for="input">Input</label>
