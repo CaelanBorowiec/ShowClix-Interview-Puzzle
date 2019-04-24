@@ -71,52 +71,59 @@ class seatingDriver {
 /**
  * Reserves a group of seats in the best available location.
  * @param seats - A number of contiguous seats to find and reserve.
- * @return False on failure
+ * @return False on failure, true on success
  */
   reserveSeatGroup(seats)
   {
     let numSeats = parseInt(seats);
-    if (numSeats > this.maxtickets)
+    if (numSeats > this.maxtickets) // More seats requested than the max specified at driver program initialization
     {
       this.logToPage("The max number of tickets that you can reserve is", this.maxtickets)
       return false;
     }
 
+    // Ask the seating class for the best seating option
     let bestseats = this.seating.findBestSeats(numSeats);
-    if (bestseats != undefined && bestseats != -1)
+    if (bestseats != undefined && bestseats != -1)  // Found a valid option
     {
+      // Reserve the seats
       let reserved = this.seating.reserveSeat(bestseats[0], bestseats[1], numSeats);
       if (!reserved)
       {
+        // An issue occured, so print an error and return false
         this.logToPage("An error occurred reserving", numSeats, "seats");
         return false;
       }
 
-      let firstSeat = "R" + bestseats[0] + "C" + bestseats[1];
-      if (numSeats == 1)
+      // Reservation worked, lets build a message
+      let firstSeat = "R" + bestseats[0] + "C" + bestseats[1]; // The first seat name
+      if (numSeats == 1) // Only one seat, print it!
         this.logToPage("Reserved seat", firstSeat);
-      else
+      else // More than one seat
       {
-        let lastSeat = "R" + bestseats[0] + "C" + (bestseats[1] + numSeats -1);
-        this.logToPage("Reserved seats: ", firstSeat, '-', lastSeat);
+        let lastSeat = "R" + bestseats[0] + "C" + (bestseats[1] + numSeats -1); // The name of the last seat in the range
+        this.logToPage("Reserved seats: ", firstSeat, '-', lastSeat); // Print a message in the format "Reserved seats: R1C3 - R1C5"
       }
 
       return true;
     }
-    else
+    else // No valid seating option was found
     {
-      this.logToPage("Not Available.");
+      this.logToPage("Not Available."); // Print 'Not Available.' and return
       return false;
     }
   }
 
+/**
+ * Accepts any number of parameters, space concatenates them and prints them to the page and browser console.
+ * @param any - any number of strings or other browser printable values
+ * @return none
+ */
   logToPage()
   {
     let container = document.getElementById(this.loggingID);
-    if (container == null)
-      return false
 
-    // Append strings similar to console.log
+    // Append all passed parameters similar to console.log
     var messageString = "";
     for (let i = 0; i < arguments.length; ++i)
     {
@@ -125,27 +132,38 @@ class seatingDriver {
         messageString += " ";
     }
 
-    // Just output to console.log for now:
-    console.log(messageString);
-    container.value += messageString + "\n" || messageString;
-    return true;
+    console.log(messageString); // Log the message to console
+    if (container != null) // If a valid DOM element exists, print it there as well
+      container.value += messageString + "\n" || messageString;
   }
 
 
-
+/**
+ * Asks the seating class for the reservation for each seat and builds a table layout
+ * The table layout is printed to a DOM element specified when the driver program is initialized
+ * @return false if no DOM element found, true otherwise.
+ */
   renderHTMLTable()
   {
+    // Get the container DOM element
     let container = document.getElementById(this.layoutID);
     if (container == null)
-      return false
+      return false; // It doesn't exist, so nothing to do.
 
+    // Start a variable and open an HTML table
     var htmlTable = "<table id='seatinglayout'>";
+    // For each row in the chart:
     for (let row = 0; row < this.seating.rows; row++)
     {
+      // Create a table row:
       htmlTable += "<tr>";
+
+      //For each seat in a row:
       for (let column = 0; column < this.seating.rowLength; column++)
       {
+        // Get the reservation status of the seat
         let seatValue = this.seating.getSeatReservation(row+1, column+1);
+        // Convert the seat value to a letter:
         switch (seatValue)
         {
           case reservationType.NONE:
@@ -158,13 +176,14 @@ class seatingDriver {
             seatValue = "V"
             break;
         }
+        // Create a table cell for each seat, and apply the class "color[Letter]".  Also set the cell value to the same Letter.
         htmlTable += "<td class='color" + seatValue + "'>"+ seatValue +"</td>";
       }
-      htmlTable += "</tr>";
+      htmlTable += "</tr>"; // End of the row, close the row.
     }
-    htmlTable += "</table>";
-    htmlTable += "<p>O = Open, X = Reserved, V = VIP Reserved</p>"
-    container.innerHTML = htmlTable;
+    htmlTable += "</table>"; // End of the table, close the table.
+    htmlTable += "<p>O = Open, X = Reserved, V = VIP Reserved</p>" // Add table legend
+    container.innerHTML = htmlTable; // Place the table inside the specified DOM element
 
     return true;
   }
