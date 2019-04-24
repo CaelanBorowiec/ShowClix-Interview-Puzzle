@@ -81,6 +81,9 @@ table#seatinglayout {
 #seatinglayout .colorO {
 	background-color: green;
 }
+#seating p {
+	text-align: center;
+}
 
 /* ~~ This is the layout information. ~~
 

@@ -143,6 +143,7 @@ class seatingDriver {
       htmlTable += "</tr>";
     }
     htmlTable += "</table>";
+    htmlTable += "<p>O = Open, X = Reserved, V = VIP Reserved</p>"
     $('#seating').html( htmlTable );
   }
 }
