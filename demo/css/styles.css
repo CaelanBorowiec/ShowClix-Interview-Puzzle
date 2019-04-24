@@ -92,12 +92,6 @@ a:hover,a:active,a:focus {
 	line-height:0
 }
 
-#url {
-    display: block;
-    margin: 10px auto;
-    width: 450px;
-}
-
 .arrow_box {
 	position:absolute;
 	margin-top: -5px;
