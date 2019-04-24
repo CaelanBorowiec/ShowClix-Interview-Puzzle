@@ -33,7 +33,7 @@ class seatingDriver {
       }
     }
 
-    console.log("The remaining number of seats is:", this.seating.freeSeats);
+    this.logToPage("The remaining number of seats is:", this.seating.freeSeats);
   }
 
 /**
@@ -52,7 +52,7 @@ class seatingDriver {
         seats = parseInt(match[4]);
 
       if (this.seating.reserveSeat(parseInt(match[1]), parseInt(match[2]), seats, 2))
-        console.log("Reserved seat at: Row", match[1], "Column", match[2]);
+        this.logToPage("Reserved seat at: Row", match[1], "Column", match[2]);
     }
   }
 
@@ -66,7 +66,7 @@ class seatingDriver {
     let numSeats = parseInt(seats);
     if (numSeats > this.maxtickets)
     {
-      console.log("The max number of tickets that you can reserve is", this.maxtickets)
+      this.logToPage("The max number of tickets that you can reserve is", this.maxtickets)
       return false;
     }
 
@@ -76,25 +76,40 @@ class seatingDriver {
       let reserved = this.seating.reserveSeat(bestseats[0], bestseats[1], numSeats);
       if (!reserved)
       {
-        console.log("An error occurred reserving", numSeats, "seats");
+        this.logToPage("An error occurred reserving", numSeats, "seats");
         return false;
       }
 
       let firstSeat = "R" + bestseats[0] + "C" + bestseats[1];
       if (numSeats == 1)
-        console.log("Reserved seat", firstSeat);
+        this.logToPage("Reserved seat", firstSeat);
       else
       {
         let lastSeat = "R" + bestseats[0] + "C" + (bestseats[1] + numSeats -1);
-        console.log("Reserved seats: ", firstSeat, '-', lastSeat);
+        this.logToPage("Reserved seats: ", firstSeat, '-', lastSeat);
       }
 
       return true;
     }
     else
     {
-      console.log("Not Available.");
+      this.logToPage("Not Available.");
       return false;
     }
+  }
+
+  logToPage()
+  {
+    // Append strings similar to console.log
+    var messageString = "";
+    for (let i = 0; i < arguments.length; ++i)
+    {
+      messageString += arguments[i];
+      if (i != arguments.length +1)
+        messageString += " ";
+    }
+
+    // Just output to console.log for now:
+    console.log(messageString);
   }
 }
