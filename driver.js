@@ -1,10 +1,11 @@
 class seatingDriver {
-  constructor(rows, columns, maxtickets)
+  constructor(rows, columns, maxtickets, logElementID)
   {
     this.maxtickets = maxtickets;
     // Matches R1C2 (Row 1, column 2), or R1C2N3 (Row 1, column 2, seats 3)
     this.regex = /[Rr](\d*)[Cc](\d*)([Nn](\d*))?/;
     this.seating = new seatingChart(rows, columns); //Create a seating group
+    this.loggingID = logElementID.replace("#", ""); // eg #log or log
   }
 
   /**
@@ -12,10 +13,8 @@ class seatingDriver {
    * @param input - user input for processing
    * @return None
    */
-  onUserInput()
+  onUserInput(input="R1C4 R1C6 R2C3 R2C7 R3C9 R3C10\n3\n3\n3\n1\n10")
   {
-    let input = "R1C4 R1C6 R2C3 R2C7 R3C9 R3C10\n3\n3\n3\n1\n10"; // Todo replace placeholder with actual user input method
-
     let lines = input.split('\n');
 
     for(var i = 0; i < lines.length; i++)
@@ -111,5 +110,6 @@ class seatingDriver {
 
     // Just output to console.log for now:
     console.log(messageString);
+    document.getElementById(this.loggingID).value += messageString + "\n" || messageString;
   }
 }
