@@ -1,11 +1,12 @@
 class seatingDriver {
-  constructor(rows, columns, maxtickets, logElementID)
+  constructor(rows, columns, maxtickets, logElementID, layoutElementID)
   {
     this.maxtickets = maxtickets;
     // Matches R1C2 (Row 1, column 2), or R1C2N3 (Row 1, column 2, seats 3)
     this.regex = /[Rr](\d*)[Cc](\d*)([Nn](\d*))?/;
     this.seating = new seatingChart(rows, columns); //Create a seating group
     this.loggingID = logElementID.replace("#", ""); // eg #log or log
+    this.layoutID = layoutElementID.replace("#", "");
   }
 
   /**
@@ -144,6 +145,6 @@ class seatingDriver {
     }
     htmlTable += "</table>";
     htmlTable += "<p>O = Open, X = Reserved, V = VIP Reserved</p>"
-    $('#seating').html( htmlTable );
+    document.getElementById(this.layoutID).innerHTML = htmlTable;
   }
 }

@@ -11,7 +11,7 @@
 
 	<script type="application/javascript">
 	$( document ).ready(function() {
-		var puppetShow = new seatingDriver(3,11,10, "log");
+		var puppetShow = new seatingDriver(3,11,10, "log", "seating");
 
 		$("#run").click(function(){
 			puppetShow.onUserInput($('textarea#input').val());
