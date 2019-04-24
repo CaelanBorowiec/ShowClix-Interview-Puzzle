@@ -11,37 +11,37 @@ class seatingDriver {
   constructor(rows, columns, maxtickets, logElementID, layoutElementID)
   {
     this.maxtickets = maxtickets;
-    // Matches R1C2 (Row 1, column 2), or R1C2N3 (Row 1, column 2, seats 3)
+    // Regex matches R1C2 (Row 1, column 2), or R1C2N3 (Row 1, column 2, seats 3)
     this.regex = /[Rr](\d*)[Cc](\d*)([Nn](\d*))?/;
     this.seating = new seatingChart(rows, columns); //Create a seating group
-    this.loggingID = logElementID.replace("#", ""); // eg #log or log
-    this.layoutID = layoutElementID.replace("#", "");
+    this.loggingID = logElementID.replace("#", ""); // eg #log or log.  Action messages will be shown here
+    this.layoutID = layoutElementID.replace("#", ""); // eg #layout or layout. A visual rendering of the seating area will be created here.
   }
 
   /**
-   * Main function, should be called when user input in captured.
+   * Main function, should be called when user input is captured.
    * @param input - user input for processing
    * @return None
    */
   onUserInput(input)
   {
-    let lines = input.split('\n');
-
+    let lines = input.split('\n'); // Split the input by line
+    // For each line:
     for(var i = 0; i < lines.length; i++)
     {
-      if (i === 0 && lines[i] != "" && this.regex.test(lines[i]))
+      if (i === 0 && lines[i] != "" && this.regex.test(lines[i])) //First line, not empty, and matches the regex pattern.
       {
-        //First line: Set up initial reservations
-        this.reserveInitialSeats(lines[i]);
+        this.reserveInitialSeats(lines[i]); //Set up initial 'VIP' reservations
       }
-      else if (lines[i] != "" && !isNaN(lines[i]))
+      else if (lines[i] != "" && !isNaN(lines[i])) //Else not empty, and contains a number.
       {
-        //All following lines: Reserve groups.
+        //Reserve groups using the seating algorithm.
         if (!this.reserveSeatGroup(lines[i]))
           continue;
       }
     }
 
+    // Always print the remaining number of seats and show the visual layout
     this.logToPage("The remaining number of seats is:", this.seating.freeSeats);
     this.renderHTMLTable();
   }
@@ -53,16 +53,18 @@ class seatingDriver {
  */
   reserveInitialSeats(line)
   {
+    // Split space delimited groups then loop each
     let groups = line.split(' ');
     for (var group = 0; group < groups.length; group++)
     {
-      let match = this.regex.exec(groups[group]);
-      let seats = 1;
-      if (match[4] != undefined)
-        seats = parseInt(match[4]);
+      let match = this.regex.exec(groups[group]); //Match with regex to get the numbers for row, column, and seat count
+      let seats = 1; // Default seat count
+      if (match[4] != undefined) // The R#C#N# format was used
+        seats = parseInt(match[4]); // Update the number of seats to reserve
 
-      if (this.seating.reserveSeat(parseInt(match[1]), parseInt(match[2]), seats, 2))
-        this.logToPage("Reserved seat at: Row", match[1], "Column", match[2]);
+      // Reserve the seat(s), marking them as VIP
+      if (this.seating.reserveSeat(parseInt(match[1]), parseInt(match[2]), seats, reservationType.VIP))
+        this.logToPage("Reserved", seats, "VIP seat(s) at: Row", match[1], "Column", match[2]); // Print a basic message
     }
   }
 
