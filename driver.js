@@ -146,13 +146,13 @@ class seatingDriver {
         let seatValue = this.seating.getSeatReservation(row+1, column+1);
         switch (seatValue)
         {
-          case 0:
+          case reservationType.NONE:
             seatValue = "O";
             break;
-          case 1:
+          case reservationType.STANDARD:
             seatValue = "X";
             break;
-          case 2:
+          case reservationType.VIP:
             seatValue = "V"
             break;
         }
