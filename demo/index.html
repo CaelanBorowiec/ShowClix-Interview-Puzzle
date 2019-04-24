@@ -11,7 +11,9 @@
 
 	<script type="application/javascript">
 	$( document ).ready(function() {
-		var puppetShow = new seatingDriver(3,11,10, "log", "seating");
+		// Create a new seating group with 3 rows, 11 columns, and maximum of 10 seats per group
+		// Send log messages to DOM ID #log and display the seating in DOM ID #seating
+		var puppetShow = new seatingDriver(3, 11, 10, "log", "seating");
 
 		$("#run").click(function(){
 			puppetShow.onUserInput($('textarea#input').val());
