@@ -3,7 +3,7 @@ var input = "R1C4 R1C6 R2C3 R2C7 R3C9 R3C10\n3\n3\n3\n1\n10"; // Todo replace pl
 var maxtickets = 10;
 
 var lines = input.split('\n');
-var regex = /[Rr](\d)[Cc](\d*)/;
+var regex = /[Rr](\d*)[Cc](\d*)/;
 for(var i = 0; i < lines.length; i++)
 {
   if (i === 0 && lines[i] != "")
