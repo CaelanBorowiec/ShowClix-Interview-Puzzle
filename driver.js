@@ -4,7 +4,7 @@ var lines = input.split('\n');
 var regex = /[Rr](\d)[Cc](\d*)/;
 for(var i = 0; i < lines.length; i++)
 {
-  if (i === 0)
+  if (i === 0 && lines[i] != "")
   {
     //First line: Set up initial reservations
     var groups = lines[i].split(' ');
