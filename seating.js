@@ -1,3 +1,4 @@
+// Define different states for reservations
 const reservationType = {
   INVALID: undefined,
   NONE: 0,
@@ -5,34 +6,42 @@ const reservationType = {
   VIP: 2
 }
 
+/**
+* Seating class
+* @param int: rows - the number of rows in the seating layout
+* @param int: columns - the number of columns (seats per row) in the seating layout
+* @return None
+*/
 class seatingChart {
   constructor(rows, columns)
   {
-    this.rows = rows;
-    this.rowLength = columns;
-    this.totalSeats = this.rows * this.rowLength;
-    this.freeSeats = this.totalSeats;
-    if (this.totalSeats < 1)
+    this.rows = rows; // Number of rows in the seating area
+    this.rowLength = columns; // Number of seats per row
+    this.totalSeats = this.rows * this.rowLength; // Store the total number of seats
+    this.freeSeats = this.totalSeats; // initialize a value for free seats
+    if (this.totalSeats < 1) // Make sure the layout is valid
       throw "This seating arrangement has no seats.";
 
-    this.rowDetails = new Array(this.rows);
+    this.rowDetails = new Array(this.rows); // Create an array for row metadata
 
     // Create a seat grid
     var seatGrid = [];
     // Set up an empty row
     var emptyRow = new Array(this.rowLength);
-    emptyRow.fill(0);
+    emptyRow.fill(reservationType.NONE); // Fill all the cells in the row with 'no reservation'
     // Set up a 2D array
     for (let i = 0; i < this.rows; i++)
     {
-      seatGrid[i] = emptyRow.slice();
+      seatGrid[i] = emptyRow.slice(); // Use slice to clone the existing 1D array
+      // Set some metadata for the row
       this.rowDetails[i] = {
         freeSeats: this.rowLength,
         largestGroup: this.rowLength,
         firstFree: 0
       }
     }
-    this.allSeats = seatGrid;
+    this.allSeats = seatGrid; // Assign our fresh 2D array
+    //End of constructor
   }
 
 
@@ -44,6 +53,7 @@ class seatingChart {
    */
   isSeatValid(row, column)
   {
+    // Check if the row is invalid, then if the column is invalid
     return (this.allSeats[row-1] != reservationType.INVALID && this.allSeats[row-1][column-1] != reservationType.INVALID);
   }
 
@@ -55,6 +65,7 @@ class seatingChart {
    */
   isSeatFree(row, column)
   {
+    // Check if the seat is valid, then if it is set to reservationType.NONE
     return (this.isSeatValid(row, column) && this.allSeats[row-1][column-1] === reservationType.NONE);
   }
 
@@ -67,9 +78,9 @@ class seatingChart {
   getSeatReservation(row, column)
   {
     if (!this.isSeatValid(row, column))
-      return reservationType.INVALID;
+      return reservationType.INVALID; // Not valid, so return invalid.
     else
-      return this.allSeats[row-1][column-1];
+      return this.allSeats[row-1][column-1]; // Otherwise return the seat value
   }
 
   /**
@@ -92,11 +103,11 @@ class seatingChart {
     //Okay, reserve the seats
     for (let ticket = 0; ticket < count; ticket++)
     {
-      this.allSeats[row-1][column-1+ticket] = reserveFlag;
-      this.freeSeats--;
-      this.rowDetails[row-1].freeSeats--;
+      this.allSeats[row-1][column-1+ticket] = reserveFlag; // Set the reservation value on the seat
+      this.freeSeats--; // Deincrement the total free seats
+      this.rowDetails[row-1].freeSeats--; // Deincrement the free seats for the row
     }
-    this.rowDetails[row-1].largestGroup = this.findLargestGroup(row);
+    this.rowDetails[row-1].largestGroup = this.findLargestGroup(row); // At the end of updating, lets also calculate the largest free space in the row, and cache it.
 
     return true;
   }
@@ -112,16 +123,15 @@ class seatingChart {
     cancelSeatReservation(row, column, count=1)
     {
       if (!this.isSeatValid(row, column) || this.rowLength < (column+count-1))
-        return false;
+        return false; // If the target seat is invalid, or we would overflow the row, return false.
 
       for (let ticket = 0; ticket < count; ticket++)
       {
-        this.allSeats[row-1][column-1+ticket] = reservationType.NONE;
-        this.freeSeats++;
-        this.rowDetails[row-1].freeSeats++;
+        this.allSeats[row-1][column-1+ticket] = reservationType.NONE; // Set the seat to unreserved
+        this.freeSeats++; // Add 1 back to the total free seats counter
+        this.rowDetails[row-1].freeSeats++; // Add 1 back to the free seats counter for the row
       }
-      this.rowDetails[row-1].largestGroup = this.findLargestGroup(row);
-
+      this.rowDetails[row-1].largestGroup = this.findLargestGroup(row); // Recalculate and cache the largest free group of seats in the row
       return true;
     }
 
@@ -134,41 +144,44 @@ class seatingChart {
   {
     var count = 0;
     var largest = 0;
-    for (let i = 1; i <= this.rowLength; i++)
+    for (let i = 1; i <= this.rowLength; i++) // each seat in the row
     {
       if (this.isSeatFree(row, i) === true)
         count++; // Seat is free, count up
 
-      if (this.isSeatFree(row, i) === false || i == this.rowLength)
+      if (this.isSeatFree(row, i) === false || i == this.rowLength) //seat is not free or is the last seat
       {
-        //seat is not free or is the last seat
-        if (count > largest)
-          largest = count;
+        if (count > largest) // Found a large grouping
+          largest = count; // Save it
         //reset count, and keep checking
         count = 0;
       }
     }
-    return largest;
+    return largest; // Largest free group of seats
   }
 
   /**
    * Searches for empty seat blocks that can accomidate a size of numSeats
    * @param numSeats - The minimum number of empty contiguous seats to search for.
+   * @param searchStart - The row to start searching on (eg, 1 for the first row).
+   * @param searchEnd - The row to stop searching on.  Use the same as searchStart to only examine one row
    * @return array: An array of objects containing matching seat groups with the following details:
    * Object: {row: number, firstseat: seatnumber, size:groupsize}
    */
   findEmptyGroups(numSeats, searchStart=1, searchEnd=this.rows)
   {
-    if (numSeats > this.rowLength || numSeats < 1) //more seats than in a row, or less than 1 seat requested.
+    if (numSeats > this.rowLength || numSeats < 1 || searchEnd < searchStart) //more seats than in a row, or less than 1 seat requested, or search starts after search stops.
       return -1;
 
-    var seatGroups = [];
+    var seatGroups = []; // Create an empty array
 
+    // For each row in the search range
     for (var row = searchStart; row <= searchEnd; row++)
     {
-      if (this.rowDetails[row-1].largestGroup < numSeats)
-      continue;
+      if (this.rowDetails[row-1].largestGroup < numSeats) // Check cache value and see if this row has any groups big enough
+      continue; //If not, move to the next row
 
+      // Otherwise, start counting seats
       var count = 0;
       var groupStart = undefined;
       for (var column = 1; column <= this.rowLength; column++)
@@ -177,9 +190,10 @@ class seatingChart {
         {
           count++; // Seat is free, count up
           if (groupStart == undefined)
-            groupStart = column;
+            groupStart = column; // Save our position when we see the first empty seat
         }
 
+        // If the seat is not free, or we hit the end of the row:
         if (this.isSeatFree(row, column) === false || column == this.rowLength) //seat is not free or is the last seat
         {
           if (count >= numSeats) // This group can fit here
