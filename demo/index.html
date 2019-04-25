@@ -17,44 +17,42 @@
 
 		// Hook clicks on the run button
 		$("#run").click(function(){
-			// Capture and send use input for processing
+			// Capture and send user input for processing
 			puppetShow.onUserInput($('textarea#input').val());
 			return false; // Prevent the form from reloading the page.
 		});
 	});
 	</script>
 </head>
-<body style="">
+<body>
 	<div class="container">
 		<div class="content">
-			<div>
-				<form action="" class="pure-form pure-form-aligned" method="post">
-					<fieldset>
-						<div class="pure-control-group">
-							<p class="instructions"><strong>Seating app instructions:</strong><br />
-								Optional: Enter VIP seats on line 1 in the format "R1C2" (row 1, column 2) or "R1C2N3" (row 1, column 2, group of 3)<br />
-								Other lines should contain a single number (eg, 2, or 10), which will reserve that many seats in the best location possible (if possible).
-							</p>
-							<label for="input">Input</label>
-							<textarea class="pure-u-2-3" id="input" name="description" placeholder="Seating input" style="height: 160px; resize: vertical;">R1C4 R1C6 R2C3 R2C7 R3C9 R3C10
+			<form action="" class="pure-form pure-form-aligned" method="post">
+				<fieldset>
+					<div class="pure-control-group">
+						<p class="instructions"><strong>Seating app instructions:</strong><br />
+							Optional: Enter VIP seats on line 1 in the format "R1C2" (row 1, column 2) or "R1C2N3" (row 1, column 2, group of 3)<br />
+							Other lines should contain a single number (eg, 2, or 10), which will reserve that many seats in the best location possible (if possible).
+						</p>
+						<label for="input">Input</label>
+						<textarea class="pure-u-2-3" id="input" name="description" placeholder="Seating input" style="height: 160px; resize: vertical;">R1C4 R1C6 R2C3 R2C7 R3C9 R3C10
 3
 3
 3
 1
 10</textarea>
 
-							<div class="spacer"></div>
-							<div id="seating"></div>
+						<div class="spacer"></div>
+						<div id="seating"></div>
 
-							<label for="log">Processing log</label>
-							<textarea class="pure-u-2-3" id="log" name="log" placeholder="Enter input and press run" readonly style="height: 160px; resize: vertical;"></textarea>
-						</div>
-						<div class="pure-controls">
-							<button class="pure-button pure-button-primary" id="run">Run</button>
-						</div>
-					</fieldset>
-				</form>
-			</div>
+						<label for="log">Processing log</label>
+						<textarea class="pure-u-2-3" id="log" name="log" placeholder="Enter input and press run" readonly style="height: 160px; resize: vertical;"></textarea>
+					</div>
+					<div class="pure-controls">
+						<button class="pure-button pure-button-primary" id="run">Run</button>
+					</div>
+				</fieldset>
+			</form>
 		</div>
 	</div>
 </body>
