@@ -10,21 +10,6 @@ body {
 	background-repeat: repeat;
 }
 
-/* ~~ Element/tag selectors ~~ */
-ul,ol,dl {
-/* Due to variations between browsers, it's best practices to zero padding and margin on lists. For consistency, you can either specify the amounts you want here, or on the list items (LI, DT, DD) they contain. Remember that what you do here will cascade to the .nav list unless you write a more specific selector. */
-	padding:0;
-	margin:0
-}
-
-h1,h2,h3,h4,h5,h6,p {
-	margin-top:0;
-/* removing the top margin gets around an issue where margins can escape from their containing div. The remaining bottom margin will hold it away from any elements that follow. */
-	padding-right:15px;
-	padding-left:15px
-/* adding the padding to the sides of the elements within the divs, instead of the divs themselves, gets rid of any box model math. A nested div with side padding can also be used as an alternate method. */
-}
-
 a img {
 /* this selector removes the default blue border displayed in some browsers around an image when it is surrounded by a link */
 	border:none
@@ -47,6 +32,7 @@ a:hover,a:active,a:focus {
 	text-decoration:none
 }
 
+/* Body content area color, borders and sizing */
 .container {
     background-color: #fff;
     border-radius: 15px;
@@ -55,6 +41,7 @@ a:hover,a:active,a:focus {
     width: 880px;
 }
 
+/* Content spacer */
 .spacer {
 	border-top: 1px solid gray;
 	margin: 25px auto;
@@ -62,16 +49,19 @@ a:hover,a:active,a:focus {
 	height: 1px;
 }
 
+/* Center and add margins and borders */
 table#seatinglayout {
     margin: 20px auto;
 	  border: 1px solid black;
 }
 
+/* add cell borders and padding */
 #seatinglayout th, #seatinglayout td {
   border: 1px solid black;
 	padding: 2px 7px;
 }
 
+/* Colors for differnt cell values */
 #seatinglayout .colorV {
 	background-color: blueviolet;
 }
@@ -81,6 +71,8 @@ table#seatinglayout {
 #seatinglayout .colorO {
 	background-color: green;
 }
+
+/* Legend and instructions */
 #seating p {
 	text-align: center;
 }
@@ -116,38 +108,4 @@ p.instructions {
 	height:0;
 	font-size:1px;
 	line-height:0
-}
-
-.arrow_box {
-	position:absolute;
-	margin-top: -5px;
-	background:#ffe70f;
-	border:2px solid #f505ad;
-	margin-left: 2px;
-    padding: 10px;
-}
-
-.arrow_box:after,.arrow_box:before {
-	right:100%;
-	top:50%;
-	border:solid transparent;
-	content:" ";
-	height:0;
-	width:0;
-	position:absolute;
-	pointer-events:none
-}
-
-.arrow_box:after {
-	border-color:rgba(255,231,15,0);
-	border-right-color:#ffe70f;
-	border-width:10px;
-	margin-top:-10px
-}
-
-.arrow_box:before {
-	border-color:rgba(245,5,173,0);
-	border-right-color:#f505ad;
-	border-width:13px;
-	margin-top:-13px
 }
