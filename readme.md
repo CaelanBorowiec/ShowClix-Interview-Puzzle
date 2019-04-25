@@ -1,10 +1,13 @@
 
+
 # ShowClix Interview Puzzle (Seating Application)
 
 **Background:**  Your younger sister is putting on a puppet show in your family's back yard. She has left you in charge of ticketing the big event. She has informed you that she wants assigned seating. She plans on setting up 33 seats; 3 rows with 11 seats each. She already has several seats reserved for her parents and best friends. Being a good computer scientist, you decide to whip up a quick program to help her out.
 Visit [https://www.showclix.com/static/puzzle.html](https://www.showclix.com/static/puzzle.html) for more details.
 
 ## Seating Chart Class:
+``var myseatingchart = new seatingChart(rows, columns);``
+Creates a seating chart object with a number of properties and methods.
 ### Seating Chart Properties
 The file seating.js defines a "seatingChart" class which has the following properties:
 * **.rows:** The number of rows in the seating area.
@@ -54,3 +57,39 @@ When the best seating group is found, the returned array will have 3 keys:
 
 **int: getManhattanDistance(row, column)**
 Returns distance of a seat from the front and center of the seating area.
+
+### reservationType Enum
+Both the seatingChart class and the driver program make use of an enum to define some reservation states for seats:
+* reservationType.INVALID = undefined (the seat does not exist).
+* reservationType.NONE: 0 (the seat is free).
+* reservationType.STANDARD: 1 (the seat is reserved).
+* reservationType.VIP: 2 (the seat has a special 'VIP' reservation).
+
+## Driver Program:
+The driver[.js] program encapsulates a number of functions which make use of the seatingChart class mentioned above.
+
+``var mySeatingArea = new seatingDriver(3, 11, 10, "log", "seating");``
+Creates a seating area with 3 rows, 11 columns, a max of 10 seats per group, and output from the program will be printed to the HTML DOM elements #log (log messages) and #seating (a visual seating chart).
+
+### Driver Program Properties
+* **.maxtickets:** The max number of seats/tickets a group can reserve together.
+* **.regex:** A regular expression to match seats entered in R1C1 (row 1, column 1) or R1C2N3 (row 1, column 2, group of 3) format.
+* **.seating:** The seating chart created from the seating class.
+* **.loggingID:** The HTML element ID to print log messages to.
+* **.layoutID:** The HTML element ID to insert a seating chart into.
+
+### Driver Program Methods
+**none: onUserInput(input)**
+Text input from the user to be processed for seating.  Can contain R1C1 or R1C1N2 format on the first line.  Any lines with just a number will start a search and reservation for that many seats in the best location possible.
+
+**none: reserveInitialSeats(text)**
+Parses a line of text for commands in R1C1 or R1C1N2 format.  Seats specified in this format will be reserved with VIP status.
+
+**bool: reserveSeatGroup(seats)**
+Searches for the number of seats specified by *seats*.  The best position found will be reserved with Stardard status.
+
+**none: logToPage(any, ..)**
+Accepts any number of parameters, concatenates them, and prints them to browser console, and (if found) the HTML element specified by *.loggingID*.
+
+**bool: renderHTMLTable()**
+Renders a seating chart as an HTML table and outputs it into the HTML element specified by *.layoutID*.  Returns true on success or false if the layoutID is invalid.
