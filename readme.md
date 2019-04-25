@@ -5,6 +5,14 @@
 **Background:**  Your younger sister is putting on a puppet show in your family's back yard. She has left you in charge of ticketing the big event. She has informed you that she wants assigned seating. She plans on setting up 33 seats; 3 rows with 11 seats each. She already has several seats reserved for her parents and best friends. Being a good computer scientist, you decide to whip up a quick program to help her out.
 Visit [https://www.showclix.com/static/puzzle.html](https://www.showclix.com/static/puzzle.html) for more details.
 
+## Demo
+Clone or download this repo, and open **/demo/index.html** in your browser.  This will open up a [demo interface](https://drive.google.com/file/d/1kGqw9TWa51ARb-1T3v-YIQ-8L_LEB299/view?usp=sharing) where you can enter commands in the following format to reserve seats:
+
+First line only: R1C1 or R1C1N3.  Create a VIP reservation for a seat at row 1, column 1, or *three* seats starting at row 1, column 1.
+
+Entering a single number (eg, 3 or 10) on any other line will search for and reserve seats for a group that size.  The smallest possible distance to the front and center of the seating area will be selected, and "not available" will be printed if no seating is found for a group of that size.
+
+
 ## Seating Chart Class:
 ``var myseatingchart = new seatingChart(rows, columns);``
 Creates a seating chart object with a number of properties and methods.
