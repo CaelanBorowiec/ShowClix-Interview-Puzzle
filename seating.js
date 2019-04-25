@@ -36,8 +36,7 @@ class seatingChart {
       // Set some metadata for the row
       this.rowDetails[i] = {
         freeSeats: this.rowLength,
-        largestGroup: this.rowLength,
-        firstFree: 0
+        largestGroup: this.rowLength
       }
     }
     this.allSeats = seatGrid; // Assign our fresh 2D array
