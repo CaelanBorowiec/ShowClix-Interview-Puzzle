@@ -193,33 +193,33 @@ class seatingChart {
             groupStart = column; // Save our position when we see the first empty seat
         }
 
-        // If the seat is not free, or we hit the end of the row:
-        if (this.isSeatFree(row, column) === false || column == this.rowLength) //seat is not free or is the last seat
+        // If the seat is not free (we reached the end of the free space), or we hit the end of the row:
+        if (this.isSeatFree(row, column) === false || column == this.rowLength)
         {
-          if (count >= numSeats) // This group can fit here
+          if (count >= numSeats) // The number of seats we want can fit here
           {
-            //store the group
+            //store the group row, seat position (column), and the size of the free space
             seatGroups.push({
               row: row,
               firstseat: groupStart,
               size: count
             });
           }
-          //reset count, and keep checking
+          //reset count and position, and keep checking for more free seats
           count = 0;
           groupStart = undefined;
         }
       }
     }
 
-    return seatGroups;
+    return seatGroups; // return an array of objects with found seat groups
   }
 
 
   /**
    * Find the optimal seating location for a group
    * @param seats - the number of contiguous seats to reserve
-   * @return Array (or -1 on failure): The starting seat [row, column] for a set of seats with the lowest manhattan distance which will accommodate the group size
+   * @return Array (or -1 on failure): The starting seat [row, column, group manhattan score] for a set of seats with the lowest manhattan distance which will accommodate the group size
    */
   findBestSeats(numSeats)
   {
@@ -232,10 +232,10 @@ class seatingChart {
     for (let row = 0; row < this.rows; row++) // For each row
     {
       var seatingOptions = this.findEmptyGroups(numSeats, row+1, row+1); // Ask for results in a single row
-      if (seatingOptions == -1 || seatingOptions.length == undefined || seatingOptions.length < 1)
-        continue; // No results in this row, go to the next one
+      if (seatingOptions == -1 || seatingOptions.length == undefined || seatingOptions.length < 1)  // nothing valid was returned
+        continue; // No results in this row, skip to the next one
 
-      for (let group = 0; group < seatingOptions.length; group++) // For each group of seats in the row
+      for (let group = 0; group < seatingOptions.length; group++) // For each group of free seats in the row
       {
         // Formula for the middle of a group:
         // offset of the seat placement minus 1 to avoid double-counting the first seat. Then add (seats + 1)/2:
@@ -248,35 +248,36 @@ class seatingChart {
         //While the gap has more seats than the requested number, the middle of the group is before the middle of the row, AND the first seat after the group is free
         while (seatingOptions[group].size > numSeats && groupMiddle < rowMiddle && this.isSeatFree(seatingOptions[group].row, lastSeat + 1))
         {
-          seatingOptions[group].firstseat ++; // Shift the group right by 1
+          // Shift the group right by 1
+          seatingOptions[group].firstseat ++;
           groupMiddle ++;
           lastSeat ++;
         }
 
-        //Group is now center aligned in the empty space, or as close as possible.
-        let distance = this.getManhattanDistance(seatingOptions[group].row, groupMiddle)
-        if (bestPosition == undefined || distance < shortestDistance)
+        //Group is now center aligned in the empty space, or as close as possible within space limits.
+        let distance = this.getManhattanDistance(seatingOptions[group].row, groupMiddle); // Get the distance score
+        if (bestPosition == undefined || distance < shortestDistance) // No position set yet, or the new distance is shorter than the saved one
         {
-          bestPosition = [seatingOptions[group].row, seatingOptions[group].firstseat, distance];
-          shortestDistance = distance;
+          bestPosition = [seatingOptions[group].row, seatingOptions[group].firstseat, distance]; // Store the position and score
+          shortestDistance = distance; // Update the new shortest distance
         }
 
-        if (Math.floor(shortestDistance) <= seatingOptions[group].row)
-          return bestPosition;
+        if (Math.floor(shortestDistance) <= seatingOptions[group].row) // If further rows would be the same score or worse (due to distance by row)
+          return bestPosition; // Skip looking at them and return early
       }
     }
     return bestPosition;
   }
 
   /**
-	 * Get the Manhattan distance of a seat from the center column of the front row
+	 * Get the Manhattan distance of a seat from the center column or gap in the front row
 	 * @param row - row number of seat
 	 * @param column - column number of seat
 	 * @return Manhattan distance of seat from the center column of the front row
  */
   getManhattanDistance(row, column)
   {
-    let middle = (this.rowLength + 1) / 2;
-    return (row - 1) + Math.abs(column - middle);
+    let middle = (this.rowLength + 1) / 2; // Get the middle seat column, or holf column if even columns
+    return (row - 1) + Math.abs(column - middle); // the row number minus 1, + the unsigned difference between the seat column and row center
   }
 }
